@@ -25,3 +25,12 @@ python compare.py file1.csv file2.jsonl --column Id --output result.csv
 The script reads the primary file (first argument) and adds a `status` column with
 either `FOUND` or `NOT FOUND` depending on whether the value from the specified
 column exists in the secondary file.
+
+To limit the result file to only rows with a particular status, use the
+`--filter` option:
+
+```
+python compare.py file1.csv file2.jsonl --column Id --output result.csv --filter FOUND
+```
+
+Valid filters are `FOUND` and `NOT_FOUND`.

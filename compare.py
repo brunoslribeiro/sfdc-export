@@ -25,7 +25,13 @@ def _read_column_values(path: str, column: str) -> List[str]:
     return values
 
 
-def compare_files(file1: str, file2: str, column: str, output: str | None = None) -> str:
+def compare_files(
+    file1: str,
+    file2: str,
+    column: str,
+    output: str | None = None,
+    status_filter: str | None = None,
+) -> str:
     """Compare column values between two files and write results with status.
 
     Args:
@@ -33,11 +39,14 @@ def compare_files(file1: str, file2: str, column: str, output: str | None = None
         file2: Secondary file path.
         column: Column/field name to compare.
         output: Optional output file path. Defaults to comparison.<ext>.
+        status_filter: Limit output to rows with this status (FOUND or NOT FOUND).
 
     Returns:
         Path to output file.
     """
     values2: Set[str] = set(_read_column_values(file2, column))
+    if status_filter:
+        status_filter = status_filter.replace("_", " ")
 
     if file1.lower().endswith(".csv"):
         with open(file1, newline="", encoding="utf-8") as f:
@@ -47,7 +56,8 @@ def compare_files(file1: str, file2: str, column: str, output: str | None = None
             for row in reader:
                 val = row.get(column)
                 row["status"] = "FOUND" if val in values2 else "NOT FOUND"
-                rows.append(row)
+                if status_filter is None or row["status"] == status_filter:
+                    rows.append(row)
         out_path = output or "comparison.csv"
         with open(out_path, "w", newline="", encoding="utf-8") as out_f:
             writer = csv.DictWriter(out_f, fieldnames=fieldnames)
@@ -61,7 +71,8 @@ def compare_files(file1: str, file2: str, column: str, output: str | None = None
                     obj = json.loads(line)
                     val = obj.get(column)
                     obj["status"] = "FOUND" if val in values2 else "NOT FOUND"
-                    results.append(obj)
+                    if status_filter is None or obj["status"] == status_filter:
+                        results.append(obj)
         out_path = output or "comparison.jsonl"
         with open(out_path, "w", encoding="utf-8") as out_f:
             for obj in results:
@@ -78,12 +89,23 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("file2", help="Secondary file (csv or jsonl)")
     parser.add_argument("--column", required=True, help="Column/field to compare")
     parser.add_argument("--output", help="Output file path")
+    parser.add_argument(
+        "--filter",
+        choices=["FOUND", "NOT_FOUND"],
+        help="Limit output to rows with given status",
+    )
     return parser.parse_args()
 
 
 def main() -> None:
     args = parse_args()
-    out = compare_files(args.file1, args.file2, args.column, args.output)
+    out = compare_files(
+        args.file1,
+        args.file2,
+        args.column,
+        args.output,
+        args.filter,
+    )
     print(f"Comparison written to {out}")
 
 
