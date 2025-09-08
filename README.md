@@ -1,6 +1,6 @@
 # SFDC Bulk Export
 
-This tool connects to Salesforce using the Bulk API 2.0, runs a SOQL query, and exports the results in newline-delimited JSON (JSONL) format.
+This tool connects to Salesforce using the Bulk API 2.0, runs a SOQL query, and exports the results in newline-delimited JSON (JSONL) or CSV format.
 
 ## How to run
 
@@ -11,5 +11,5 @@ This tool connects to Salesforce using the Bulk API 2.0, runs a SOQL query, and 
    ```
 3. Run:
    ```
-   python main.py
+   python main.py [--format jsonl|csv]
    ```
