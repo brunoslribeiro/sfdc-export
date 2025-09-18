@@ -4,14 +4,14 @@ This tool connects to Salesforce using the Bulk API 2.0, runs a SOQL query, and 
 
 ## How to run
 
-1. Create a `.env` file with your credentials (see `.env.example`)
+1. Create a `.env` file with your Salesforce credentials (see `.env.example`).
 2. Install dependencies:
    ```
    pip install -r requirements.txt
    ```
 3. Run:
    ```
-   python main.py [--format jsonl|csv]
+   python main.py --query "SELECT Id FROM Account" [--format jsonl|csv] [--directory output]
    ```
 
 ## Comparing Exported Files

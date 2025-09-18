@@ -3,7 +3,7 @@ import time
 from sfdc_export import config
 from sfdc_export.logger import log
 
-def create_job(token: str, instance_url: str) -> str:
+def create_job(token: str, instance_url: str, query: str) -> str:
     log("🚀 Creating query job...")
     headers = {
         "Authorization": f"Bearer {token}",
@@ -12,7 +12,7 @@ def create_job(token: str, instance_url: str) -> str:
     response = requests.post(
         f"{instance_url}/services/data/{config.SFDC_MYAPI}/jobs/query",
         headers=headers,
-        json={"operation": "query", "query": config.SFDC_QUERY}
+        json={"operation": "query", "query": query}
     )
 
     if response.status_code != 200:

@@ -8,14 +8,20 @@ from sfdc_export import config
 from sfdc_export.logger import log
 
 
-def extract_results(token: str, instance_url: str, job_id: str, output_format: str = "jsonl"):
+def extract_results(
+    token: str,
+    instance_url: str,
+    job_id: str,
+    output_format: str = "jsonl",
+    output_dir: str = "./output",
+):
     headers = {"Authorization": f"Bearer {token}"}
     locator = None
     chunk = 0
     total = 0
     extension = "csv" if output_format == "csv" else "jsonl"
-    output_file = os.path.join(config.SFDC_DIRECTORY, f"result.{extension}")
-    os.makedirs(config.SFDC_DIRECTORY, exist_ok=True)
+    output_file = os.path.join(output_dir, f"result.{extension}")
+    os.makedirs(output_dir, exist_ok=True)
 
     file_kwargs = {"newline": ""} if output_format == "csv" else {}
 
