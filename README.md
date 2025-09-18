@@ -14,6 +14,23 @@ This tool connects to Salesforce using the Bulk API 2.0, runs a SOQL query, and 
    python main.py --query "SELECT Id FROM Account" [--format jsonl|csv] [--directory output]
    ```
 
+## Authentication configuration
+
+The application supports the Salesforce OAuth password grant (default) and the
+client credentials flow. Configure the `.env` file with the following
+variables:
+
+- `SFDC_MYORG`: OAuth token endpoint (for example,
+  `https://login.salesforce.com/services/oauth2/token`).
+- `SFDC_MYAPI`: Bulk API version path (for example, `v59.0`).
+- `SFDC_CLIENT_ID` and `SFDC_CLIENT_SECRET`: Connected app credentials.
+- `SFDC_GRANT_TYPE`: Optional. Use `password` (default) or
+  `client_credentials`.
+- `SFDC_USERNAME` and `SFDC_PASSWORD`: Required only when `SFDC_GRANT_TYPE` is
+  `password`.
+- `SFDC_CLIENT_AUDIENCE`: Required only when `SFDC_GRANT_TYPE` is
+  `client_credentials`.
+
 ## Comparing Exported Files
 
 Use `compare.py` to check if a given column value appears in two CSV or JSONL files.
